@@ -6,7 +6,11 @@ let timer;
 
 function appStart() {
   const displayGameover = () => {
-    window.alert("게임이 종료됐습니다.");
+    const div = document.createElement("div");
+    div.innerText = "게임이 종료됐습니다.";
+    div.style =
+      "display:flex; justify-content:center; align-items:center; position:absolute; top:40vh; left:35%; background-color:lemonchiffon; width:400px; height:200px;";
+    document.body.appendChild(div);
   };
 
   const gameover = () => {
@@ -21,9 +25,8 @@ function appStart() {
     index = 0;
   };
 
-  const handleEnterKey = () => {
+  const handleEnterKey = async () => {
     let 맞은_갯수 = 0;
-
     for (let i = 0; i < 5; i++) {
       const block = document.querySelector(
         `.board-column[data-index='${attempts}${i}']`
@@ -70,6 +73,30 @@ function appStart() {
       index += 1;
     }
   };
+
+  document
+    .querySelectorAll(".key-block, .key-enter, .key-backspace")
+    .forEach((key) => {
+      key.addEventListener("click", () => {
+        const keyValue = key.getAttribute("data-key").toUpperCase();
+
+        if (keyValue === "ENTER") {
+          if (index === 5) {
+            handleEnterKey();
+          }
+        } else if (keyValue === "BACKSPACE") {
+          handleBackspace();
+        } else {
+          if (index < 5) {
+            const thisBlock = document.querySelector(
+              `.board-column[data-index='${attempts}${index}']`
+            );
+            thisBlock.innerText = keyValue;
+            index += 1;
+          }
+        }
+      });
+    });
 
   const startTimer = () => {
     const 시작_시간 = new Date();
